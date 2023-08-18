@@ -7,11 +7,32 @@ const ProductSchema = mongoose.Schema({
   discountPercentage: { type: Number, required: true, min: [0], max: [90] },
   rating: { type: Number, required: true, min: [1], max: [5], default: 0 },
   stock: { type: Number, required: true, min: [1] },
-  brand: { type: String, required: true },
-  category: { type: String, required: true },
+  brand: {
+    type: ObjectId,
+    ref: "Brand",
+    required: true,
+  },
+  category: {
+    type: ObjectId,
+    ref: "Category",
+    required: true,
+  },
   thumbnail: { type: String, required: true },
   images: [{ type: String, required: true }],
   deleted: { type: Boolean, default: false },
+});
+
+ProductSchema.virtual("id").get(function () {
+  return this._id.toHexString();
+});
+
+// Ensure virtual fields are included when converting to JSON
+ProductSchema.set("toJSON", {
+  virtuals: true,
+  versionKey: false,
+  transform: function (doc, ret) {
+    delete ret._id;
+  },
 });
 
 exports.Product = mongoose.model("Product", ProductSchema);
