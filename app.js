@@ -3,6 +3,9 @@ const cors = require("cors");
 require("dotenv").config();
 
 const connection = require("./database");
+const app = express();
+
+const Product = require("./routes/ProductRoute");
 
 const PORT = process.env.PORT || 8080;
 
@@ -15,7 +18,8 @@ connection()
   });
 
 app.use(cors());
+app.use(express.json())
 
-const app = express();
+app.use("/api/product", Product);
 
 app.listen(PORT);
