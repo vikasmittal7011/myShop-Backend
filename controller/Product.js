@@ -1,18 +1,27 @@
 const { Product } = require("../models/Product");
 const { validationResult } = require("express-validator");
 
-exports.createProduct = async (req, res) => {
+const HttpError = require("../models/http-error");
+
+exports.createProduct = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const errorMessages = errors.array().map((error) => error.msg);
-    return res.status(400).json({ errors: errorMessages });
+    return next(new HttpError(errorMessages, 401));
   }
+  const images = req.files.images.map((image) => {
+    return image.path;
+  });
+  let newProduct = { ...req.body };
+  newProduct.thumbnail = req.files.thumbnail[0].path;
+  newProduct.images = images;
   try {
-    const product = new Product(req.body);
+    const product = new Product(newProduct);
     const data = await product.save();
     res.status(200).json({ success: true, data });
   } catch (err) {
-    res.status(400).json({ success: false });
+    console.log(err);
+    return next(new HttpError("Internal server error", 500));
   }
 };
 
@@ -59,5 +68,22 @@ exports.fetchProductById = async (req, res) => {
     res.status(200).json({ success: true, product });
   } catch (err) {
     res.status(400).json({ success: false });
+  }
+};
+
+exports.updateProduct = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const errorMessages = errors.array().map((error) => error.msg);
+    return next(new HttpError(errorMessages, 401));
+  }
+  const { id } = req.params;
+  try {
+    const product = await Product.findByIdAndUpdate({ _id: id }, req.body, {
+      new: true,
+    });
+    res.status(200).json({ success: true, product });
+  } catch (err) {
+    return next(new HttpError("Internal server error", 500));
   }
 };

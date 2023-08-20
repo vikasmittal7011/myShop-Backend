@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { ObjectId } = mongoose.Schema;
 
 const ProductSchema = mongoose.Schema({
   title: { type: String, required: true, unique: true },
