@@ -27,6 +27,7 @@ app.use(
   })
 );
 app.use(express.json());
+app.use("/upload", express.static(path.join("upload")));
 
 app.use("/api/product", Product);
 app.use("/api/brand", Brand);
