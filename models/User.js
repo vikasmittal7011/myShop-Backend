@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
 
 const UserSehema = mongoose.Schema({
-  name: { type: String, required: true },
+  name: { type: String, required: true, default: "Base User" },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  addresses: [{ type: Schema.Types.Mixed, required: true }],
+  addresses: [{ type: mongoose.Schema.Types.Mixed }],
   role: { type: String, required: true, default: "user" },
 });
 
@@ -12,7 +12,6 @@ UserSehema.virtual("id").get(function () {
   return this._id.toHexString();
 });
 
-// Ensure virtual fields are included when converting to JSON
 UserSehema.set("toJSON", {
   virtuals: true,
   versionKey: false,

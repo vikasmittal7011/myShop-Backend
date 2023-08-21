@@ -10,6 +10,7 @@ const app = express();
 const Product = require("./routes/ProductRoute");
 const Category = require("./routes/CategoryRoute");
 const Brand = require("./routes/BrandRoute");
+const Auth = require("./routes/AuthRoute");
 
 const PORT = process.env.PORT || 8080;
 
@@ -32,6 +33,7 @@ app.use("/upload", express.static(path.join("upload")));
 app.use("/api/product", Product);
 app.use("/api/brand", Brand);
 app.use("/api/category", Category);
+app.use("/api/auth", Auth);
 
 app.use((req, res, next) => {
   next(new HttpError("Not route found", 404));
