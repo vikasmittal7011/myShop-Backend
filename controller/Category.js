@@ -1,5 +1,6 @@
 const { validationResult } = require("express-validator");
 const { Category } = require("../models/Category");
+const { capitalize } = require("../utils/capitalize");
 
 exports.createCategory = async (req, res) => {
   const errors = validationResult(req);
@@ -8,7 +9,8 @@ exports.createCategory = async (req, res) => {
     return res.status(400).json({ errors: errorMessages });
   }
   try {
-    const category = new Category(req.body);
+    const name = capitalize(req.body.name);
+    const category = new Category({ name: name });
     const data = await category.save();
     res.status(200).json({ success: true, data });
   } catch (err) {
@@ -19,8 +21,8 @@ exports.createCategory = async (req, res) => {
 exports.fetchAllCategories = async (req, res) => {
   try {
     const category = await Category.find();
-    res.status(200).json({ sucess: true, category });
+    res.status(200).json({ success: true, category });
   } catch (err) {
-    res.status(400).json({ sucess: false });
+    res.status(400).json({ success: false });
   }
 };

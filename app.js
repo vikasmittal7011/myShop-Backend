@@ -29,7 +29,7 @@ app.use(
   })
 );
 app.use(express.json());
-app.use("/upload", express.static(path.join("upload")));
+app.use("/api/upload", express.static(path.join("upload")));
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
