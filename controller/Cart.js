@@ -24,7 +24,7 @@ exports.addToCart = async (req, res, next) => {
 exports.fetchUserItems = async (req, res, next) => {
   const { user } = req.params;
   try {
-    const cart = await Cart.find({ user });
+    const cart = await Cart.find({ user }).populate("item");
     if (cart) {
       res.status(200).json({ success: true, cart });
     } else {
