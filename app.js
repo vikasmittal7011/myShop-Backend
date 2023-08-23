@@ -12,6 +12,7 @@ const Category = require("./routes/CategoryRoute");
 const Brand = require("./routes/BrandRoute");
 const Auth = require("./routes/AuthRoute");
 const User = require("./routes/UserRoute");
+const Cart = require("./routes/CartRoute");
 
 const PORT = process.env.PORT || 8080;
 
@@ -45,6 +46,7 @@ app.use("/api/brand", Brand);
 app.use("/api/category", Category);
 app.use("/api/auth", Auth);
 app.use("/api/user", User);
+app.use("/api/cart", Cart);
 
 app.use((req, res, next) => {
   next(new HttpError("Not route found", 404));
