@@ -52,11 +52,19 @@ app.use((req, res, next) => {
 
 app.use((error, req, res, next) => {
   if (req.files) {
-    console.log(req.files.images[0].path);
     fs.unlink(req.files.thumbnail[0].path, (err) => {});
-    req.files.images.map((image) => {
-      fs.unlink(image.path, (err) => {});
-    });
+    if (req.files.image1) {
+      fs.unlink(req.files.image1[0].path, (err) => {});
+    }
+    if (req.files.image2) {
+      fs.unlink(req.files.image2[0].path, (err) => {});
+    }
+    if (req.files.image3) {
+      fs.unlink(req.files.image3[0].path, (err) => {});
+    }
+    if (req.files.image4) {
+      fs.unlink(req.files.image4[0].path, (err) => {});
+    }
   }
   if (res.heardersSent) {
     return next(error);

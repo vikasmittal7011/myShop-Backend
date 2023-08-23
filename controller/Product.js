@@ -7,21 +7,32 @@ exports.createProduct = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const errorMessages = errors.array().map((error) => error.msg);
-    return next(new HttpError(errorMessages, 401));
+    return next(new HttpError(errorMessages, 422));
   }
-  const images = req.files.images.map((image) => {
-    return image.path;
-  });
+  let selectedImages = [];
   let newProduct = { ...req.body };
   newProduct.thumbnail = req.files.thumbnail[0].path;
-  newProduct.images = images;
+  if (req.files.image1) {
+    selectedImages.push(req.files.image1[0].path);
+  }
+  if (req.files.image2) {
+    selectedImages.push(req.files.image2[0].path);
+  }
+  if (req.files.image3) {
+    selectedImages.push(req.files.image3[0].path);
+  }
+  if (req.files.image4) {
+    selectedImages.push(req.files.image4[0].path);
+  }
+  newProduct.images = selectedImages;
+  console.log(newProduct, req.body);
   try {
     const product = new Product(newProduct);
     const data = await product.save();
     res.status(200).json({ success: true, data });
   } catch (err) {
     console.log(err);
-    return next(new HttpError("Internal server error", 500));
+    return next(new HttpError(err, 500));
   }
 };
 

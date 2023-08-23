@@ -20,7 +20,6 @@ exports.createBrand = async (req, res) => {
 exports.fetchAllBrands = async (req, res) => {
   try {
     const brand = await Brand.find();
-    res.set("X-Total-Count", totalDocs);
     res.status(200).json({ sucess: true, brand });
   } catch (err) {
     res.status(400).json({ sucess: false });

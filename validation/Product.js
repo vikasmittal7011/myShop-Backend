@@ -17,11 +17,6 @@ exports.createProductValidation = [
     .isEmpty()
     .isLength({ min: 0, max: 90 })
     .withMessage("Discount Percentage not be nully"),
-  body("rating")
-    .not()
-    .isEmpty()
-    .isLength({ min: 0, max: 5 })
-    .withMessage("Rating must be between 0 to 5"),
   body("stock")
     .not()
     .isEmpty()

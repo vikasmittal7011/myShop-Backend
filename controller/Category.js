@@ -19,7 +19,6 @@ exports.createCategory = async (req, res) => {
 exports.fetchAllCategories = async (req, res) => {
   try {
     const category = await Category.find();
-    res.set("X-Total-Count", totalDocs);
     res.status(200).json({ sucess: true, category });
   } catch (err) {
     res.status(400).json({ sucess: false });

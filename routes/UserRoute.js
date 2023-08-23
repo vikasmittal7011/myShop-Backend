@@ -4,6 +4,6 @@ const userAuth = require("../middleware/userAuth");
 
 const router = express.Router();
 
-router.get("/:id", userAuth, fetchUserData).patch("/:id", updateUser);
+router.get("/:id", fetchUserData).patch("/:id", updateUser);
 
 module.exports = router;
