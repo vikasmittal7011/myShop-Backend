@@ -21,3 +21,18 @@ exports.createOrder = async (req, res, next) => {
     return next(new HttpError("Internal server error", 500));
   }
 };
+
+exports.fetchUserOrders = async (req, res, next) => {
+  const { user } = req.params;
+  try {
+    const data = await Order.find({ user: user }).populate("items");
+    console.log(data);
+    if (data) {
+      res.status(200).json({ success: true, data });
+    } else {
+      return next(new HttpError("Failed to fetch orders", 422));
+    }
+  } catch (err) {
+    return next(new HttpError("Internal server error", 500));
+  }
+};

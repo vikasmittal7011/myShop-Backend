@@ -2,16 +2,10 @@ const mongoose = require("mongoose");
 const { ObjectId } = mongoose.Schema;
 
 const OrderSchema = mongoose.Schema({
-  items: [
-    {
-      type: ObjectId,
-      ref: "Cart",
-      required: true,
-    },
-  ],
+  items: [{ type: mongoose.Schema.Types.Mixed, required: true }],
   totalItems: { type: Number, required: true, min: [1] },
   totalPrice: { type: Number, required: true, min: [1] },
-  address: [{ type: mongoose.Schema.Types.Mixed, required: true }],
+  address: { type: mongoose.Schema.Types.Mixed, required: true },
   paymentMethod: { type: String, required: true },
   user: {
     type: ObjectId,
