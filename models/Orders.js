@@ -11,7 +11,19 @@ const OrderSchema = mongoose.Schema({
   ],
   totalItems: { type: Number, required: true, min: [1] },
   totalPrice: { type: Number, required: true, min: [1] },
-  address: [{ type: Schema.Types.MixedF, required: true }],
+  address: [{ type: mongoose.Schema.Types.Mixed, required: true }],
+  paymentMethod: { type: String, required: true },
+  user: {
+    type: ObjectId,
+    ref: "User",
+    required: true,
+  },
+  status: {
+    type: String,
+    required: true,
+    default: "Pending",
+    enum: ["Pending", "Dispatch", "Delivered", "Cancel"],
+  },
 });
 
 OrderSchema.virtual("id").get(function () {
