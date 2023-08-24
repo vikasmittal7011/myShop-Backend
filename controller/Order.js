@@ -60,3 +60,17 @@ exports.fetchOrders = async (req, res, next) => {
     res.status(400).json({ sucess: false });
   }
 };
+
+exports.updateOrders = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const data = await Order.findByIdAndUpdate(id, req.body);
+    if (data) {
+      res.status(200).json({ sucess: true, data: req.body });
+    } else {
+      res.status(422).json({ message: "Update failed" });
+    }
+  } catch (err) {
+    res.status(400).json({ sucess: false });
+  }
+};
