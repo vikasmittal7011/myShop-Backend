@@ -25,13 +25,11 @@ exports.createProduct = async (req, res, next) => {
     selectedImages.push(req.files.image4[0].path);
   }
   newProduct.images = selectedImages;
-  console.log(newProduct, req.body);
   try {
     const product = new Product(newProduct);
     const data = await product.save();
     res.status(200).json({ success: true, data });
   } catch (err) {
-    console.log(err);
     return next(new HttpError(err, 500));
   }
 };

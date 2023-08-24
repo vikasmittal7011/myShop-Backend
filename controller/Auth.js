@@ -11,7 +11,6 @@ const salt = process.env.SALT;
 exports.createUser = async (req, res, next) => {
   const result = validationResult(req);
   if (!result.isEmpty()) {
-    console.log(result);
     return next(new HttpError("Enter valid credential", 400));
   }
   let user;
@@ -34,7 +33,6 @@ exports.createUser = async (req, res, next) => {
       });
     });
   } catch (err) {
-    console.log(err);
     return next(new HttpError("Internal server error", 500));
   }
 };

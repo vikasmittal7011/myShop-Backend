@@ -11,7 +11,6 @@ module.exports = (req, res, next) => {
       throw new Error("Authentication Failed!!");
     }
     const tokenValue = jwt.verify(token, process.env.JWT_TOKEN);
-    console.log(tokenValue.role);
     if (tokenValue.role === "admin") {
       req.userData = { userId: tokenValue.userid };
       next();

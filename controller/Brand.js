@@ -14,7 +14,6 @@ exports.createBrand = async (req, res) => {
     const data = await brand.save();
     res.status(200).json({ success: true, data });
   } catch (err) {
-    console.log(err);
     res.status(400).json({ success: false });
   }
 };
