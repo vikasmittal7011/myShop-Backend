@@ -1,19 +1,22 @@
 const mongoose = require("mongoose");
 const { ObjectId } = mongoose.Schema;
 
-const CartSehema = mongoose.Schema({
-  item: {
-    type: ObjectId,
-    ref: "Product",
-    required: true,
+const CartSehema = mongoose.Schema(
+  {
+    item: {
+      type: ObjectId,
+      ref: "Product",
+      required: true,
+    },
+    quantity: { type: Number, required: true, default: 1 },
+    user: {
+      type: ObjectId,
+      ref: "User",
+      required: true,
+    },
   },
-  quantity: { type: Number, required: true, default: 1 },
-  user: {
-    type: ObjectId,
-    ref: "User",
-    required: true,
-  },
-});
+  { timestamps: true }
+);
 
 CartSehema.virtual("id").get(function () {
   return this._id.toHexString();

@@ -1,8 +1,11 @@
 const mongoose = require("mongoose");
 
-const CategorySehema = mongoose.Schema({
-  name: { type: String, required: true, unique: true },
-});
+const CategorySehema = mongoose.Schema(
+  {
+    name: { type: String, required: true, unique: true },
+  },
+  { timestamps: true }
+);
 
 CategorySehema.virtual("id").get(function () {
   return this._id.toHexString();

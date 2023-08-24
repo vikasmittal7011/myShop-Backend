@@ -4,9 +4,12 @@ const BrandSehema = mongoose.Schema({
   name: { type: String, required: true, unique: true },
 });
 
-BrandSehema.virtual("id").get(function () {
-  return this._id.toHexString();
-});
+BrandSehema.virtual("id").get(
+  function () {
+    return this._id.toHexString();
+  },
+  { timestamps: true }
+);
 
 // Ensure virtual fields are included when converting to JSON
 BrandSehema.set("toJSON", {

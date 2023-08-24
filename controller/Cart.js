@@ -69,7 +69,6 @@ exports.deleteAllItem = async (req, res, next) => {
   const { user } = req.params;
   try {
     const cart = await Cart.deleteMany({ user: user });
-    console.log(user, cart);
     if (cart) {
       res.status(200).json({ success: true, user });
     } else {
