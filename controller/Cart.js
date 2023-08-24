@@ -50,3 +50,32 @@ exports.updateCart = async (req, res, next) => {
     return next(new HttpError("Internal server error", 500));
   }
 };
+
+exports.deleteItem = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const cart = await Cart.findByIdAndRemove(id);
+    if (cart) {
+      res.status(200).json({ success: true, id });
+    } else {
+      return next(new HttpError("Item failed to add to cart", 422));
+    }
+  } catch (err) {
+    return next(new HttpError("Internal server error", 500));
+  }
+};
+
+exports.deleteAllItem = async (req, res, next) => {
+  const { user } = req.params;
+  try {
+    const cart = await Cart.deleteMany({ user: user });
+    console.log(user, cart);
+    if (cart) {
+      res.status(200).json({ success: true, user });
+    } else {
+      return next(new HttpError("Item failed to add to cart", 422));
+    }
+  } catch (err) {
+    return next(new HttpError("Internal server error", 500));
+  }
+};
