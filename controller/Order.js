@@ -24,9 +24,9 @@ exports.createOrder = async (req, res, next) => {
 };
 
 exports.fetchUserOrders = async (req, res, next) => {
-  const { user } = req.params;
+  const { id } = req.userData;
   try {
-    const data = await Order.find({ user: user }).populate("items");
+    const data = await Order.find({ user: id }).populate("items");
     if (data) {
       res.status(200).json({ success: true, data });
     } else {

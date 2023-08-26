@@ -13,7 +13,7 @@ const router = express.Router();
 
 router
   .get("/", adminAuth, fetchOrders)
-  .get("/", fetchUserOrders)
+  .get("/user", userAuth, fetchUserOrders)
   .post("/", userAuth, createOrderValiation, createOrder)
   .patch("/:id", adminAuth, createOrderValiation, updateOrders);
 
