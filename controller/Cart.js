@@ -9,7 +9,8 @@ exports.addToCart = async (req, res, next) => {
     return next(new HttpError(errorMessages, 401));
   }
   try {
-    const cart = await new Cart(req.body).populate("item");
+    const { id } = req.userData;
+    const cart = await new Cart({ ...req.body, user: id }).populate("item");
     const data = await cart.save();
     if (data) {
       res.status(200).json({ success: true, data });
@@ -22,9 +23,9 @@ exports.addToCart = async (req, res, next) => {
 };
 
 exports.fetchUserItems = async (req, res, next) => {
-  const { user } = req.params;
+  const { id } = req.userData;
   try {
-    const cart = await Cart.find({ user }).populate("item");
+    const cart = await Cart.find({ user: id }).populate("item");
     if (cart) {
       res.status(200).json({ success: true, cart });
     } else {
@@ -66,15 +67,17 @@ exports.deleteItem = async (req, res, next) => {
 };
 
 exports.deleteAllItem = async (req, res, next) => {
-  const { user } = req.params;
+  const { id } = req.userData;
+  console.log(id, req.userData);
   try {
-    const cart = await Cart.deleteMany({ user: user });
+    const cart = await Cart.deleteMany({ user: id });
     if (cart) {
-      res.status(200).json({ success: true, user });
+      res.status(200).json({ success: true });
     } else {
-      return next(new HttpError("Item failed to add to cart", 422));
+      return next(new HttpError("Failed to clear to cart", 422));
     }
   } catch (err) {
+    console.log(err);
     return next(new HttpError("Internal server error", 500));
   }
 };

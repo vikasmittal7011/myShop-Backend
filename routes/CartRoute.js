@@ -7,14 +7,15 @@ const {
   deleteItem,
   deleteAllItem,
 } = require("../controller/Cart");
+const userAuth = require("../middleware/userAuth");
 
 const router = express.Router();
 
 router
-  .get("/:user", fetchUserItems)
-  .post("/", createCartValiation, addToCart)
-  .patch("/:id", createCartValiation, updateCart)
-  .delete("/:id", deleteItem)
-  .delete("/clear-cart/:user", deleteAllItem);
+  .get("/", userAuth, fetchUserItems)
+  .post("/", userAuth, createCartValiation, addToCart)
+  .patch("/:id", userAuth, createCartValiation, updateCart)
+  .delete("/:id", userAuth, deleteItem)
+  .delete("/clear-cart", userAuth, deleteAllItem);
 
 module.exports = router;
