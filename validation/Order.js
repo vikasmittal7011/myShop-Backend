@@ -9,6 +9,5 @@ exports.createOrderValiation = [
     .not()
     .isEmpty()
     .withMessage("paymentMethod not be null"),
-  check("user").not().isEmpty().withMessage("user not be null"),
   check("status").not().isEmpty().withMessage("status not be null"),
 ];

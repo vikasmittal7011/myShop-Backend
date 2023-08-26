@@ -10,7 +10,8 @@ exports.createOrder = async (req, res, next) => {
     return res.status(400).json({ errors: errorMessages });
   }
   try {
-    const order = new Order(req.body);
+    const { id } = req.userData;
+    const order = new Order({ ...req.body, user: id });
     const data = await order.save();
     if (data) {
       res.status(200).json({ success: true, data });
@@ -66,7 +67,7 @@ exports.updateOrders = async (req, res, next) => {
   try {
     const data = await Order.findByIdAndUpdate(id, req.body);
     if (data) {
-      res.status(200).json({ sucess: true, data: req.body });
+      res.status(200).json({ success: true, data: req.body });
     } else {
       res.status(422).json({ message: "Update failed" });
     }

@@ -6,13 +6,15 @@ const {
   updateOrders,
 } = require("../controller/Order");
 const { createOrderValiation } = require("../validation/Order");
+const userAuth = require("../middleware/userAuth");
+const adminAuth = require("../middleware/adminAuth");
 
 const router = express.Router();
 
 router
-  .get("/", fetchOrders)
-  .get("/:user", fetchUserOrders)
-  .post("/", createOrderValiation, createOrder)
-  .patch("/:id", createOrderValiation, updateOrders);
+  .get("/", adminAuth, fetchOrders)
+  .get("/", fetchUserOrders)
+  .post("/", userAuth, createOrderValiation, createOrder)
+  .patch("/:id", adminAuth, createOrderValiation, updateOrders);
 
 module.exports = router;
