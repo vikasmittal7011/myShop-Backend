@@ -12,6 +12,7 @@ module.exports = (req, res, next) => {
     }
     const tokenValue = jwt.verify(token, process.env.JWT_TOKEN);
     if (tokenValue) {
+      req.userData = { id: tokenValue.id };
       next();
     }
   } catch (err) {

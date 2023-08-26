@@ -12,7 +12,7 @@ module.exports = (req, res, next) => {
     }
     const tokenValue = jwt.verify(token, process.env.JWT_TOKEN);
     if (tokenValue.role === "user") {
-      req.userData = { userId: tokenValue.userid };
+      req.userData = { id: tokenValue.id };
       next();
     } else {
       return next(new HttpError("You are not right user!!", 401));
