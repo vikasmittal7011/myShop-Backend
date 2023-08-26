@@ -8,6 +8,7 @@ const {
 const { createProductValidation } = require("../validation/Product");
 
 const fileUploading = require("../middleware/fileUploading");
+const adminAuth = require("../middleware/adminAuth");
 
 const router = express.Router();
 
@@ -16,6 +17,7 @@ router
   .get("/:id", fetchProductById)
   .post(
     "/",
+    adminAuth,
     fileUploading.fields([
       { name: "thumbnail", maxCount: 1 },
       { name: "image1", maxCount: 1 },
@@ -26,6 +28,6 @@ router
     [createProductValidation],
     createProduct
   )
-  .patch("/:id", createProductValidation, updateProduct);
+  .patch("/:id", adminAuth, createProductValidation, updateProduct);
 
 module.exports = router;
