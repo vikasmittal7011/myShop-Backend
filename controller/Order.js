@@ -55,9 +55,9 @@ exports.fetchOrders = async (req, res, next) => {
   try {
     const docs = await query.exec();
     res.set("X-Total-Count", totalDocs);
-    res.status(200).json({ sucess: true, orders: docs });
+    res.status(200).json({ success: true, orders: docs });
   } catch (err) {
-    res.status(400).json({ sucess: false });
+    res.status(400).json({ message: "Internal Server Error" });
   }
 };
 
