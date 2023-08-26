@@ -2,7 +2,7 @@ const HttpError = require("../models/http-error");
 const { User } = require("../models/User");
 
 exports.fetchUserData = async (req, res, next) => {
-  const id = req.params.id;
+  const { id } = req.userData;
   try {
     const user = await User.findById(id, "-password");
 
@@ -17,7 +17,7 @@ exports.fetchUserData = async (req, res, next) => {
 };
 
 exports.updateUser = async (req, res, next) => {
-  const id = req.params.id;
+  const { id } = req.userData;
   try {
     const user = await User.findByIdAndUpdate(
       id,

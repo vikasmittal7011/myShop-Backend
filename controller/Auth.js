@@ -28,7 +28,6 @@ exports.createUser = async (req, res, next) => {
       token = jwt.sign({ id: user.id, role: user.role }, jwt_key);
       return res.json({
         success: true,
-        user: { role: user.role, id: user.id },
         token,
       });
     });
@@ -57,7 +56,7 @@ exports.loginUser = async (req, res, next) => {
 
     token = jwt.sign({ id: _id, role: role }, jwt_key);
 
-    res.json({ token, user: { role: user.role, id: user.id }, success: true });
+    res.json({ token, success: true });
   } catch (err) {
     return next(new HttpError("Internal server error", 500));
   }
