@@ -35,8 +35,9 @@ exports.createProduct = async (req, res, next) => {
 };
 
 exports.fetchAllProducts = async (req, res) => {
+  const { admin } = req.query;
   let query = Product.find({});
-  let totalProductsQuery = Product.find({});
+  let totalProductsQuery = Product.find({ deleted: admin });
 
   if (req.query.category) {
     query = query.find({ category: req.query.category });
@@ -48,7 +49,6 @@ exports.fetchAllProducts = async (req, res) => {
     query = query.find({ brand: req.query.brand });
     totalProductsQuery = totalProductsQuery.find({ brand: req.query.brand });
   }
-  //TODO : How to get sort on discounted Price not on Actual price
   if (req.query._sort && req.query._order) {
     query = query.sort({ [req.query._sort]: req.query._order });
   }

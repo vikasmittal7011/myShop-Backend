@@ -68,7 +68,6 @@ exports.deleteItem = async (req, res, next) => {
 
 exports.deleteAllItem = async (req, res, next) => {
   const { id } = req.userData;
-  console.log(id, req.userData);
   try {
     const cart = await Cart.deleteMany({ user: id });
     if (cart) {
@@ -77,7 +76,6 @@ exports.deleteAllItem = async (req, res, next) => {
       return next(new HttpError("Failed to clear to cart", 422));
     }
   } catch (err) {
-    console.log(err);
     return next(new HttpError("Internal server error", 500));
   }
 };
