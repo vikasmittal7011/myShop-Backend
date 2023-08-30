@@ -3,6 +3,7 @@ const cors = require("cors");
 const fs = require("fs");
 const path = require("path");
 require("dotenv").config();
+const stripe = require("stripe")(process.env.STRIPE_PRIVATE_KEY);
 
 const connection = require("./database");
 const app = express();
@@ -49,6 +50,25 @@ app.use("/api/auth", Auth);
 app.use("/api/user", User);
 app.use("/api/cart", Cart);
 app.use("/api/order", Order);
+
+app.post("/api/create-payment-intent", async (req, res) => {
+  const { items } = req.body;
+
+  try {
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: items * 100,
+      currency: "inr",
+      automatic_payment_methods: {
+        enabled: true,
+      },
+    });
+    res.send({
+      clientSecret: paymentIntent.client_secret,
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
 
 app.use((req, res, next) => {
   next(new HttpError("Not route found", 404));

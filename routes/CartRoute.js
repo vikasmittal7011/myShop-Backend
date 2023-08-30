@@ -15,7 +15,7 @@ router
   .get("/", userAuth, fetchUserItems)
   .post("/", userAuth, createCartValiation, addToCart)
   .patch("/:id", userAuth, createCartValiation, updateCart)
-  .delete("/:id", userAuth, deleteItem)
-  .delete("/clear-cart", userAuth, deleteAllItem);
+  .delete("/clear-cart", userAuth, deleteAllItem)
+  .delete("/:id", userAuth, deleteItem);
 
 module.exports = router;
