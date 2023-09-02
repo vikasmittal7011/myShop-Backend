@@ -19,6 +19,12 @@ const OrderSchema = mongoose.Schema(
       default: "Pending",
       enum: ["Pending", "Dispatch", "Delivered", "Cancel"],
     },
+    paymentStatus: {
+      type: String,
+      required: true,
+      default: "Pending",
+      enum: ["Pending", "Receive"],
+    },
   },
   { timestamps: true }
 );
