@@ -16,7 +16,7 @@ const User = require("./routes/UserRoute");
 const Cart = require("./routes/CartRoute");
 const Order = require("./routes/OrderRoute");
 
-const { Orders } = require("./models/Orders");
+const { Order: OrderModal } = require("./models/Orders");
 
 const PORT = process.env.PORT || 8080;
 
@@ -50,7 +50,7 @@ app.post(
         const id = paymentIntentSucceeded.metadata.orderId;
         console.log(paymentIntentSucceeded.metadata.orderId);
 
-        const order = await Orders.findById({ _id: id });
+        const order = await OrderModal.findById({ _id: id });
         console.log(order);
         order.paymentStatus = "Receive";
         await order.save();
