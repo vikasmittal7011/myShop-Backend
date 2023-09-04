@@ -50,9 +50,7 @@ app.post(
         const id = paymentIntentSucceeded.metadata.orderId;
         console.log(paymentIntentSucceeded.metadata.orderId);
 
-        const order = await Orders.findById(
-          paymentIntentSucceeded.metadata.orderId
-        );
+        const order = await Orders.findById(id);
         order.paymentStatus = "Receive";
         await order.save();
 
