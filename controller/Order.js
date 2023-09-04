@@ -28,7 +28,7 @@ exports.fetchUserOrders = async (req, res, next) => {
   try {
     const data = await Order.find({ user: id })
       .populate("items")
-      .sort({ createdAt: 1 });
+      .sort({ createdAt: "desc" });
     if (data) {
       res.status(200).json({ success: true, data });
     } else {
