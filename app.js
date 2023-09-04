@@ -3,11 +3,11 @@ const cors = require("cors");
 const fs = require("fs");
 const path = require("path");
 require("dotenv").config();
-const stripe = require("stripe")(process.env.STRIPE_PRIVATE_KEY);
 
 const connection = require("./database");
 const app = express();
 
+const Stripe = require("./routes/StripeRoute");
 const Product = require("./routes/ProductRoute");
 const Category = require("./routes/CategoryRoute");
 const Brand = require("./routes/BrandRoute");
@@ -26,37 +26,37 @@ connection()
     console.log(err);
   });
 
-app.post(
-  "/api/webhook",
-  express.raw({ type: "application/json" }),
-  (request, response) => {
-    const sig = request.headers["stripe-signature"];
+// app.post(
+//   "/api/webhook",
+//   express.raw({ type: "application/json" }),
+//   (request, response) => {
+//     const sig = request.headers["stripe-signature"];
 
-    let event;
+//     let event;
 
-    try {
-      event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
-    } catch (err) {
-      response.status(400).send(`Webhook Error: ${err.message}`);
-      return;
-    }
+//     try {
+//       event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
+//     } catch (err) {
+//       response.status(400).send(`Webhook Error: ${err.message}`);
+//       return;
+//     }
 
-    // Handle the event
-    switch (event.type) {
-      case "payment_intent.succeeded":
-        const paymentIntentSucceeded = event.data.object;
-        console.log({ paymentIntentSucceeded });
-        // Then define and call a function to handle the event payment_intent.succeeded
-        break;
-      // ... handle other event types
-      default:
-        console.log(`Unhandled event type ${event.type}`);
-    }
+//     // Handle the event
+//     switch (event.type) {
+//       case "payment_intent.succeeded":
+//         const paymentIntentSucceeded = event.data.object;
+//         console.log(paymentIntentSucceeded.metadata.orderId);
+//         // Then define and call a function to handle the event payment_intent.succeeded
+//         break;
+//       // ... handle other event types
+//       default:
+//         console.log(`Unhandled event type ${event.type}`);
+//     }
 
-    // Return a 200 response to acknowledge receipt of the event
-    response.send();
-  }
-);
+//     // Return a 200 response to acknowledge receipt of the event
+//     response.send();
+//   }
+// );
 
 app.use(
   cors({
@@ -82,28 +82,27 @@ app.use("/api/auth", Auth);
 app.use("/api/user", User);
 app.use("/api/cart", Cart);
 app.use("/api/order", Order);
+app.use("/api", Stripe);
 
-app.post("/api/create-payment-intent", async (req, res) => {
-  const { items, orderId } = req.body;
+// app.post("/api/create-payment-intent", async (req, res) => {
+//   const { items, orderId } = req.body;
 
-  try {
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: items * 100,
-      currency: "inr",
-      automatic_payment_methods: {
-        enabled: true,
-      },
-      metadata: { orderId },
-    });
-    res.send({
-      clientSecret: paymentIntent.client_secret,
-    });
-  } catch (err) {
-    res.status(500).json({ message: "Internal server error" });
-  }
-});
-
-const endpointSecret = process.env.STRIPE_ENDPOINT_SECRET;
+//   try {
+//     const paymentIntent = await stripe.paymentIntents.create({
+//       amount: items * 100,
+//       currency: "inr",
+//       automatic_payment_methods: {
+//         enabled: true,
+//       },
+//       metadata: { orderId },
+//     });
+//     res.send({
+//       clientSecret: paymentIntent.client_secret,
+//     });
+//   } catch (err) {
+//     res.status(500).json({ message: "Internal server error" });
+//   }
+// });
 
 app.use((req, res, next) => {
   next(new HttpError("Not route found", 404));

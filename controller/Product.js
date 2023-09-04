@@ -39,7 +39,6 @@ exports.fetchAllProducts = async (req, res) => {
 
   let condition = {};
   if (admin === "false") {
-    console.log("enter");
     condition.deleted = { $ne: true };
   }
 
