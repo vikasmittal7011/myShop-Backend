@@ -16,6 +16,8 @@ const User = require("./routes/UserRoute");
 const Cart = require("./routes/CartRoute");
 const Order = require("./routes/OrderRoute");
 
+const Orders = require("./models/Orders");
+
 const PORT = process.env.PORT || 8080;
 
 connection()
@@ -29,7 +31,7 @@ connection()
 app.post(
   "/api/webhook",
   express.raw({ type: "application/json" }),
-  (request, response) => {
+  async (request, response) => {
     const sig = request.headers["stripe-signature"];
 
     let event;
@@ -45,7 +47,15 @@ app.post(
     switch (event.type) {
       case "payment_intent.succeeded":
         const paymentIntentSucceeded = event.data.object;
+        const id = paymentIntentSucceeded.metadata.orderId;
         console.log(paymentIntentSucceeded.metadata.orderId);
+
+        const order = await Orders.findById(
+          paymentIntentSucceeded.metadata.orderId
+        );
+        order.paymentStatus = "Receive";
+        await order.save();
+
         // Then define and call a function to handle the event payment_intent.succeeded
         break;
       // ... handle other event types
