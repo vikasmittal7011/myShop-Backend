@@ -26,7 +26,9 @@ exports.createOrder = async (req, res, next) => {
 exports.fetchUserOrders = async (req, res, next) => {
   const { id } = req.userData;
   try {
-    const data = await Order.find({ user: id }).populate("items");
+    const data = await Order.find({ user: id })
+      .populate("items")
+      .sort({ createdAt: 1 });
     if (data) {
       res.status(200).json({ success: true, data });
     } else {
