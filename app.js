@@ -16,7 +16,7 @@ const User = require("./routes/UserRoute");
 const Cart = require("./routes/CartRoute");
 const Order = require("./routes/OrderRoute");
 
-const Orders = require("./models/Orders");
+const { Orders } = require("./models/Orders");
 
 const PORT = process.env.PORT || 8080;
 
