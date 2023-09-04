@@ -84,7 +84,7 @@ app.use("/api/cart", Cart);
 app.use("/api/order", Order);
 
 app.post("/api/create-payment-intent", async (req, res) => {
-  const { items } = req.body;
+  const { items, orderId } = req.body;
 
   try {
     const paymentIntent = await stripe.paymentIntents.create({
@@ -93,6 +93,7 @@ app.post("/api/create-payment-intent", async (req, res) => {
       automatic_payment_methods: {
         enabled: true,
       },
+      metadata: { orderId },
     });
     res.send({
       clientSecret: paymentIntent.client_secret,
