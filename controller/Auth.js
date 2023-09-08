@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs");
 
 const { User } = require("../models/User");
 const HttpError = require("../models/http-error");
+const transporter = require("../utils/nodemailer");
 
 const jwt_key = process.env.JWT_TOKEN;
 const salt = process.env.SALT;
@@ -57,6 +58,33 @@ exports.loginUser = async (req, res, next) => {
     token = jwt.sign({ id: _id, role: role }, jwt_key);
 
     res.json({ token, success: true });
+  } catch (err) {
+    return next(new HttpError("Internal server error", 500));
+  }
+};
+
+exports.resetPasswordRequest = async (req, res, next) => {
+  let { email } = req.body;
+  try {
+    const user = await User.findOne({ email: email });
+
+    if (!user) {
+      return next(new HttpError("User is not exist, check your email", 404));
+    }
+    const info = await transporter.sendMail({
+      from: "myshop@gmail.com",
+      to: email,
+      subject: "Reset Your Password!!",
+      html: `<p>Click <a href="http://localhost:3000/reset-password">here</a> to reset your password!!</p>`, // html body
+    });
+
+    if (info) {
+      res.json({ success: true });
+    }
+    res.json({
+      success: false,
+      message: "Failed to send email please try again laterF",
+    });
   } catch (err) {
     return next(new HttpError("Internal server error", 500));
   }
