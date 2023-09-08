@@ -7,6 +7,7 @@ const UserSehema = mongoose.Schema(
     password: { type: String, required: true },
     addresses: [{ type: mongoose.Schema.Types.Mixed }],
     role: { type: String, required: true, default: "user" },
+    passwordResetToken: { type: String },
   },
   { timestamps: true }
 );

@@ -66,16 +66,23 @@ exports.loginUser = async (req, res, next) => {
 exports.resetPasswordRequest = async (req, res, next) => {
   let { email } = req.body;
   try {
-    const user = await User.findOne({ email: email });
+    let user = await User.findOne({ email: email });
 
     if (!user) {
       return next(new HttpError("User is not exist, check your email", 404));
     }
+
+    const token = jwt.sign({ email: email }, jwt_key);
+
+    user.passwordResetToken = token;
+
+    await user.save();
+
     const info = await transporter.sendMail({
       from: "myshop@gmail.com",
       to: email,
       subject: "Reset Your Password!!",
-      html: `<p>Click <a href="http://localhost:3000/reset-password">here</a> to reset your password!!</p>`, // html body
+      html: `<p>Click <a href="http://localhost:3000/reset-password?token=${token}">here</a> to reset your password!!</p>`,
     });
 
     if (info) {
@@ -84,6 +91,29 @@ exports.resetPasswordRequest = async (req, res, next) => {
     res.json({
       success: false,
       message: "Failed to send email please try again laterF",
+    });
+  } catch (err) {
+    return next(new HttpError("Internal server error", 500));
+  }
+};
+
+exports.resetPassword = async (req, res, next) => {
+  const { token, password } = req.body;
+  const tokenValue = jwt.verify(token, process.env.JWT_TOKEN);
+  const { email } = tokenValue;
+  let user;
+  try {
+    user = await User.findOne({ email: email });
+    if (token !== user.passwordResetToken) {
+      return next(new HttpError("Bad Request, failed to reset password", 422));
+    }
+    bcrypt.hash(password, parseInt(salt)).then(async (pass) => {
+      user.password = pass;
+      user.passwordResetToken = "";
+      await user.save();
+      return res.json({
+        success: true,
+      });
     });
   } catch (err) {
     return next(new HttpError("Internal server error", 500));
