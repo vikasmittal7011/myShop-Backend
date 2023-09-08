@@ -5,7 +5,7 @@ const path = require("path");
 require("dotenv").config();
 const stripe = require("stripe")(process.env.STRIPE_PRIVATE_KEY);
 
-const connection = require("./database");
+const connection = require("./utils/database");
 const app = express();
 
 const Product = require("./routes/ProductRoute");
