@@ -48,10 +48,8 @@ app.post(
       case "payment_intent.succeeded":
         const paymentIntentSucceeded = event.data.object;
         const id = paymentIntentSucceeded.metadata.orderId;
-        console.log(paymentIntentSucceeded.metadata.orderId);
 
         const order = await OrderModal.findById({ _id: id });
-        console.log(order);
         order.paymentStatus = "Receive";
         await order.save();
 

@@ -2,6 +2,8 @@ const { validationResult } = require("express-validator");
 
 const HttpError = require("../models/http-error");
 const { Order } = require("../models/Orders");
+const template = require("../utils/userInvoiceTemplate");
+const transporter = require("../utils/nodemailer");
 
 exports.createOrder = async (req, res, next) => {
   const result = validationResult(req);
@@ -14,6 +16,12 @@ exports.createOrder = async (req, res, next) => {
     const order = new Order({ ...req.body, user: id });
     const data = await order.save();
     if (data) {
+      transporter.sendMail({
+        from: "myshop@gmail.com",
+        to: data.address.email,
+        subject: "MyShop Order Invoice",
+        html: template(data),
+      });
       res.status(200).json({ success: true, data });
     } else {
       return next(new HttpError("Order not placed", 422));
