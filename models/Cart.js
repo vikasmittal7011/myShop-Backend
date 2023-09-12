@@ -14,6 +14,8 @@ const CartSehema = mongoose.Schema(
       ref: "User",
       required: true,
     },
+    size: { type: mongoose.Schema.Types.Mixed },
+    color: { type: mongoose.Schema.Types.Mixed },
   },
   { timestamps: true }
 );
