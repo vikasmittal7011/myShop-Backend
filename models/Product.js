@@ -23,6 +23,7 @@ const ProductSchema = mongoose.Schema(
     },
     thumbnail: { type: String, required: true },
     images: [{ type: String, required: true }],
+    highlights: [{ type: String }],
     deleted: { type: Boolean, default: false },
   },
   { timestamps: true }
