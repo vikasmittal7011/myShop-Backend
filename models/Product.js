@@ -9,6 +9,8 @@ const ProductSchema = mongoose.Schema(
     discountPercentage: { type: Number, required: true, min: [0], max: [90] },
     rating: { type: Number, required: true, min: [0], max: [5], default: 0 },
     stock: { type: Number, required: true, min: [1] },
+    colors: [{ type: mongoose.Schema.Types.Mixed }],
+    sizes: [{ type: mongoose.Schema.Types.Mixed }],
     brand: {
       type: ObjectId,
       ref: "Brand",

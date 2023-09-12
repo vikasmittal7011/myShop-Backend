@@ -25,6 +25,8 @@ exports.createProduct = async (req, res, next) => {
     selectedImages.push(req.files.image4[0].path);
   }
   newProduct.images = selectedImages;
+  newProduct.colors = JSON.parse(req.body.colors);
+  newProduct.sizes = JSON.parse(req.body.sizes);
   try {
     const product = new Product(newProduct);
     const data = await product.save();
