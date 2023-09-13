@@ -4,6 +4,7 @@ const {
   fetchAllProducts,
   fetchProductById,
   updateProduct,
+  fetchRelatedProduct,
 } = require("../controller/Product");
 const { createProductValidation } = require("../validation/Product");
 
@@ -15,6 +16,7 @@ const router = express.Router();
 router
   .get("/", fetchAllProducts)
   .get("/:id", fetchProductById)
+  .get("/relatedProduct/:id", fetchRelatedProduct)
   .post(
     "/",
     adminAuth,

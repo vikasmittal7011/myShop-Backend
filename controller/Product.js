@@ -104,3 +104,28 @@ exports.updateProduct = async (req, res, next) => {
     return next(new HttpError("Internal server error", 500));
   }
 };
+
+exports.fetchRelatedProduct = async (req, res, next) => {
+  const pid = req.params.id;
+  const limit = req.query.limit || 10;
+  try {
+    let product = await Product.findOne({ _id: pid });
+
+    if (!product) {
+      return next(new HttpError("Product not found!", 404));
+    }
+
+    let relatedProduct = await Product.find({
+      _id: { $ne: product },
+      category: product.category,
+    }).limit(limit);
+
+    if (!relatedProduct) {
+      return next(new HttpError("Product not found!", 404));
+    }
+
+    res.json({ success: true, product: relatedProduct });
+  } catch (err) {
+    return next(new HttpError("Internal server error", 500));
+  }
+};
