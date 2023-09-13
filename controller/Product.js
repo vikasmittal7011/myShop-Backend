@@ -27,6 +27,9 @@ exports.createProduct = async (req, res, next) => {
   newProduct.images = selectedImages;
   newProduct.colors = JSON.parse(req.body.colors);
   newProduct.sizes = JSON.parse(req.body.sizes);
+  newProduct.discountPrice = Math.round(
+    newProduct?.price * (1 - newProduct?.discountPercentage / 100)
+  );
   try {
     const product = new Product(newProduct);
     const data = await product.save();
@@ -104,9 +107,17 @@ exports.updateProduct = async (req, res, next) => {
   }
   const { id } = req.params;
   try {
-    const product = await Product.findByIdAndUpdate({ _id: id }, req.body, {
-      new: true,
-    });
+    const updatedProduct = { ...req.body };
+    updatedProduct.discountPrice = Math.round(
+      updatedProduct?.price * (1 - updatedProduct?.discountPercentage / 100)
+    );
+    const product = await Product.findByIdAndUpdate(
+      { _id: id },
+      updatedProduct,
+      {
+        new: true,
+      }
+    );
     res.status(200).json({ success: true, product });
   } catch (err) {
     return next(new HttpError("Internal server error", 500));
