@@ -1,9 +1,10 @@
 const { validationResult } = require("express-validator");
+const transporter = require("../utils/nodemailer");
 
 const HttpError = require("../models/http-error");
 const { Order } = require("../models/Orders");
+const { Product } = require("../models/Product");
 const template = require("../utils/userInvoiceTemplate");
-const transporter = require("../utils/nodemailer");
 
 exports.createOrder = async (req, res, next) => {
   const result = validationResult(req);
@@ -15,6 +16,16 @@ exports.createOrder = async (req, res, next) => {
     const { id } = req.userData;
     const order = new Order({ ...req.body, user: id });
     const data = await order.save();
+    const bulkOptions = req.body.items.map((item) => {
+      return {
+        updateOne: {
+          filter: { _id: item.item.id },
+          update: { $inc: { stock: -item.quantity } },
+        },
+      };
+    });
+
+    await Product.bulkWrite(bulkOptions);
     if (data) {
       transporter.sendMail({
         from: "myshop@gmail.com",
