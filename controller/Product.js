@@ -38,6 +38,7 @@ exports.createProduct = async (req, res, next) => {
 
 exports.fetchAllProducts = async (req, res) => {
   const admin = req.query.admin;
+  console.log(req.query);
 
   let condition = {};
   if (admin === "false") {
@@ -47,6 +48,12 @@ exports.fetchAllProducts = async (req, res) => {
   let query = Product.find(condition);
   let totalProductsQuery = Product.find(condition);
 
+  if (req.query.search) {
+    query = query.find({ title: { $regex: req.query.search, $options: "i" } });
+    totalProductsQuery = totalProductsQuery.find({
+      title: { $regex: req.query.search, $options: "i" },
+    });
+  }
   if (req.query.category) {
     query = query.find({ category: req.query.category });
     totalProductsQuery = totalProductsQuery.find({
