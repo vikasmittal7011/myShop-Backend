@@ -38,3 +38,19 @@ exports.postReview = async (req, res, next) => {
     return next(new HttpError("Internal server error", 500));
   }
 };
+
+exports.fetchReviews = async (req, res, next) => {
+  try {
+    const { product } = req.params;
+    const reviews = await Review.find({ product }).populate({
+      path: "user",
+      select: "name",
+    });
+
+    if (reviews) {
+      res.json({ success: true, reviews });
+    }
+  } catch (err) {
+    return next(new HttpError("Internal server error", 500));
+  }
+};
