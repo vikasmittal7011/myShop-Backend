@@ -55,3 +55,37 @@ exports.fetchReviews = async (req, res, next) => {
     return next(new HttpError("Internal server error", 500));
   }
 };
+
+exports.updateReview = async (req, res, next) => {
+  let updatedReview;
+  try {
+    const { id } = req.params;
+    const { id: user } = req.userData;
+    const review = await Review.findOne({ _id: id });
+
+    if (review.user.toString() === user) {
+      updatedReview = await Review.findByIdAndUpdate(
+        id,
+        { ...req.body },
+        { new: true }
+      ).populate({
+        path: "user",
+        select: "name",
+      });
+    } else {
+      return next(new HttpError("You are not rigth user", 400));
+    }
+
+    if (updatedReview) {
+      const result = updateProductRating(
+        review.product.toString(),
+        updatedReview.id
+      );
+      if (result) {
+        res.json({ success: true, review: updatedReview });
+      }
+    }
+  } catch (err) {
+    return next(new HttpError("Internal server error", 500));
+  }
+};
