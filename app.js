@@ -15,6 +15,7 @@ const Auth = require("./routes/AuthRoute");
 const User = require("./routes/UserRoute");
 const Cart = require("./routes/CartRoute");
 const Order = require("./routes/OrderRoute");
+const Review = require("./routes/ReviewRoute");
 
 const { Order: OrderModal } = require("./models/Orders");
 
@@ -89,6 +90,7 @@ app.use("/api/auth", Auth);
 app.use("/api/user", User);
 app.use("/api/cart", Cart);
 app.use("/api/order", Order);
+app.use("/api/review", Review);
 
 app.post("/api/create-payment-intent", async (req, res) => {
   const { items, orderId } = req.body;

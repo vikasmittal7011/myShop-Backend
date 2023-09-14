@@ -7,7 +7,14 @@ const ProductSchema = mongoose.Schema(
     description: { type: String, required: true },
     price: { type: Number, required: true, min: [0], max: [10000] },
     discountPercentage: { type: Number, required: true, min: [0], max: [90] },
-    rating: { type: Number, required: true, min: [0], max: [5], default: 0 },
+    averageRating: { type: Number, default: 0 },
+    totalRating: [
+      {
+        type: ObjectId,
+        ref: "Review",
+        required: true,
+      },
+    ],
     stock: { type: Number, required: true, min: [1] },
     discountPrice: { type: Number, required: true },
     colors: [{ type: mongoose.Schema.Types.Mixed }],
