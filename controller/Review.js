@@ -25,7 +25,8 @@ const updateProductRating = async (id, rId) => {
 
 exports.postReview = async (req, res, next) => {
   try {
-    const review = new Review({ ...req.body });
+    const { id } = req.userData;
+    const review = new Review({ ...req.body, user: id });
     await review.save();
 
     if (review) {
