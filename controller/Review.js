@@ -30,7 +30,7 @@ exports.postReview = async (req, res, next) => {
     await review.save();
 
     if (review) {
-      const result = updateProductRating(req.body.product, review.id);
+      const result = await updateProductRating(req.body.product, review.id);
       if (result) {
         res.json({ success: true, review });
       }
@@ -41,15 +41,27 @@ exports.postReview = async (req, res, next) => {
 };
 
 exports.fetchReviews = async (req, res, next) => {
-  try {
-    const { product } = req.params;
-    const reviews = await Review.find({ product }).populate({
+  const { product } = req.params;
+  let query = Review.find({ product })
+    .populate({
       path: "user",
       select: "name",
-    });
+    })
+    .sort({ createdAt: "desc" });
+  let totalReviewsQuery = Review.find({ product });
 
-    if (reviews) {
-      res.json({ success: true, reviews });
+  const totalDocs = await totalReviewsQuery.count().exec();
+
+  if (req.query._page && req.query._limit) {
+    const pageSize = req.query._limit;
+    const page = req.query._page;
+    query = query.skip(pageSize * (page - 1)).limit(pageSize);
+  }
+  try {
+    const docs = await query.exec();
+    res.set("X-Total-Count", totalDocs);
+    if (docs) {
+      res.json({ success: true, reviews: docs });
     }
   } catch (err) {
     return next(new HttpError("Internal server error", 500));
@@ -77,7 +89,7 @@ exports.updateReview = async (req, res, next) => {
     }
 
     if (updatedReview) {
-      const result = updateProductRating(
+      const result = await updateProductRating(
         review.product.toString(),
         updatedReview.id
       );
