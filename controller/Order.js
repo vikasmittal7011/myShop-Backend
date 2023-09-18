@@ -5,7 +5,6 @@ const HttpError = require("../models/http-error");
 const { Order } = require("../models/Orders");
 const { Product } = require("../models/Product");
 const template = require("../utils/userInvoiceTemplate");
-const simpleText = require("../utils/userInvoiceSimpleTextTemplate");
 
 exports.createOrder = async (req, res, next) => {
   const result = validationResult(req);
@@ -28,17 +27,12 @@ exports.createOrder = async (req, res, next) => {
 
     await Product.bulkWrite(bulkOptions);
     if (data) {
-      try {
-        transporter.sendMail({
-          from: "myshop@gmail.com",
-          to: data.address.email,
-          subject: "MyShop Order Invoice",
-          text: simpleText(data),
-          html: template(data),
-        });
-      } catch (err) {
-        console.log(err);
-      }
+      transporter.sendMail({
+        from: "myshop@gmail.com",
+        to: data.address.email,
+        subject: "MyShop Order Invoice",
+        html: template(data),
+      });
       res.status(200).json({ success: true, data });
     } else {
       return next(new HttpError("Order not placed", 422));
@@ -94,17 +88,12 @@ exports.updateOrders = async (req, res, next) => {
   try {
     const data = await Order.findByIdAndUpdate(id, req.body);
     if (data) {
-      try {
-        transporter.sendMail({
-          from: "myshop@gmail.com",
-          to: req.body.address.email,
-          subject: "Myshop Order Status Update!!!",
-          text: simpleText(req.body),
-          html: template(req.body),
-        });
-      } catch (err) {
-        console.log(err);
-      }
+      transporter.sendMail({
+        from: "myshop@gmail.com",
+        to: req.body.address.email,
+        subject: "Myshop Order Status Update!!!",
+        html: template(req.body),
+      });
       res.status(200).json({ success: true, data: req.body });
     } else {
       res.status(422).json({ message: "Update failed" });
