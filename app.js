@@ -72,7 +72,7 @@ app.use(
   })
 );
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "build")));
+app.use(express.static(path.resolve(__dirname, "build")));
 app.use("/api/upload", express.static(path.join("upload")));
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -84,10 +84,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "build", "index.html"));
-});
-
 app.use("/api/product", Product);
 app.use("/api/brand", Brand);
 app.use("/api/category", Category);
@@ -96,6 +92,10 @@ app.use("/api/user", User);
 app.use("/api/cart", Cart);
 app.use("/api/order", Order);
 app.use("/api/review", Review);
+
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve("build", "index.html"));
+});
 
 app.post("/api/create-payment-intent", async (req, res) => {
   const { items, orderId } = req.body;
