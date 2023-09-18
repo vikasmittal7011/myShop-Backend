@@ -89,6 +89,12 @@ exports.updateOrders = async (req, res, next) => {
     const data = await Order.findByIdAndUpdate(id, req.body);
     if (data) {
       res.status(200).json({ success: true, data: req.body });
+      transporter.sendMail({
+        from: "myshop@gmail.com",
+        to: req.body.address.email,
+        subject: "Myshop Order Status Update!!!",
+        html: template(req.body),
+      });
     } else {
       res.status(422).json({ message: "Update failed" });
     }
