@@ -5,6 +5,7 @@ const HttpError = require("../models/http-error");
 const { Order } = require("../models/Orders");
 const { Product } = require("../models/Product");
 const template = require("../utils/userInvoiceTemplate");
+const simpleText = require("../utils/userInvoiceSimpleTextTemplate");
 
 exports.createOrder = async (req, res, next) => {
   const result = validationResult(req);
@@ -32,6 +33,7 @@ exports.createOrder = async (req, res, next) => {
           from: "myshop@gmail.com",
           to: data.address.email,
           subject: "MyShop Order Invoice",
+          text: simpleText(data),
           html: template(data),
         });
       } catch (err) {
@@ -97,6 +99,7 @@ exports.updateOrders = async (req, res, next) => {
           from: "myshop@gmail.com",
           to: req.body.address.email,
           subject: "Myshop Order Status Update!!!",
+          text: simpleText(req.body),
           html: template(req.body),
         });
       } catch (err) {
