@@ -72,6 +72,7 @@ app.use(
   })
 );
 app.use(express.json());
+app.use(express.static(path.join(__dirname, "build")));
 app.use("/api/upload", express.static(path.join("upload")));
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -81,6 +82,10 @@ app.use((req, res, next) => {
   );
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, PATCH");
   next();
+});
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "build", "index.html"));
 });
 
 app.use("/api/product", Product);
