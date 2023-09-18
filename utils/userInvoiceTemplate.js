@@ -91,6 +91,7 @@ const template = (order) => {
             <p>Address: ${address.street} ${address.state}, ${address.city}, ${
     address.country
   } - ${address.pinCode}</p>
+            <p>Order Status: ${order.status}</p>
             <p>Payment Status: ${order.paymentStatus}</p>
             <p>Payment Method: ${order.paymentMethod}</p>
         </div>

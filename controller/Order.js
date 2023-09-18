@@ -59,7 +59,7 @@ exports.fetchUserOrders = async (req, res, next) => {
 };
 
 exports.fetchOrders = async (req, res, next) => {
-  let query = Order.find({});
+  let query = Order.find({}).sort({ createdAt: "desc" });
   let totalProductsQuery = Order.find({});
 
   if (req.query._sort && req.query._order) {
@@ -88,13 +88,13 @@ exports.updateOrders = async (req, res, next) => {
   try {
     const data = await Order.findByIdAndUpdate(id, req.body);
     if (data) {
-      res.status(200).json({ success: true, data: req.body });
       transporter.sendMail({
         from: "myshop@gmail.com",
         to: req.body.address.email,
         subject: "Myshop Order Status Update!!!",
         html: template(req.body),
       });
+      res.status(200).json({ success: true, data: req.body });
     } else {
       res.status(422).json({ message: "Update failed" });
     }
