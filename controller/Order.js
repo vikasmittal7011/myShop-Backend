@@ -27,12 +27,16 @@ exports.createOrder = async (req, res, next) => {
 
     await Product.bulkWrite(bulkOptions);
     if (data) {
-      transporter.sendMail({
-        from: "myshop@gmail.com",
-        to: data.address.email,
-        subject: "MyShop Order Invoice",
-        html: template(data),
-      });
+      try {
+        transporter.sendMail({
+          from: "myshop@gmail.com",
+          to: data.address.email,
+          subject: "MyShop Order Invoice",
+          html: template(data),
+        });
+      } catch (err) {
+        console.log(err);
+      }
       res.status(200).json({ success: true, data });
     } else {
       return next(new HttpError("Order not placed", 422));
@@ -88,12 +92,16 @@ exports.updateOrders = async (req, res, next) => {
   try {
     const data = await Order.findByIdAndUpdate(id, req.body);
     if (data) {
-      transporter.sendMail({
-        from: "myshop@gmail.com",
-        to: req.body.address.email,
-        subject: "Myshop Order Status Update!!!",
-        html: template(req.body),
-      });
+      try {
+        transporter.sendMail({
+          from: "myshop@gmail.com",
+          to: req.body.address.email,
+          subject: "Myshop Order Status Update!!!",
+          html: template(req.body),
+        });
+      } catch (err) {
+        console.log(err);
+      }
       res.status(200).json({ success: true, data: req.body });
     } else {
       res.status(422).json({ message: "Update failed" });
