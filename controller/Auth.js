@@ -82,7 +82,7 @@ exports.resetPasswordRequest = async (req, res, next) => {
       from: "myshop@gmail.com",
       to: email,
       subject: "Reset Your Password!!",
-      html: `<p>Click <a href="http://localhost:3000/reset-password?token=${token}">here</a> to reset your password!!</p>`,
+      html: `<p>Click <a href="https://myshop-fx41.onrender.com/reset-password?token=${token}">here</a> to reset your password!!</p>`,
     });
 
     if (info) {
@@ -90,7 +90,7 @@ exports.resetPasswordRequest = async (req, res, next) => {
     }
     res.json({
       success: false,
-      message: "Failed to send email please try again laterF",
+      message: "Failed to send email please try again later",
     });
   } catch (err) {
     return next(new HttpError("Internal server error", 500));
